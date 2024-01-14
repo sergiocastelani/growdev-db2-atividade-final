@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  name String
+
+  tweets Tweet[]
+  likes Like[]
+  authorization Authorization?
+}
+
+model Tweet {
+  id Int @id @default(autoincrement())
+  userId Int @map("user_id")
+  repliedId Int? @map("replied_id")
+
+  user User @relation(fields: [userId], references: [id])
+  repliedTweet Tweet? @relation("TweetReplies", fields: [repliedId], references: [id])
+  replies Tweet[] @relation("TweetReplies")
+  likes Like[]
+}
+
+model Like {
+  tweetId Int @map("tweet_id")
+  userId Int @map("user_id")
+
+  user User @relation(fields: [userId], references: [id])
+  tweet Tweet @relation(fields: [tweetId], references: [id])
+
+  @@id([tweetId, userId])
+}
+
+model Authorization {
+  userId Int @id @map("user_id")
+  token String
+
+  user User @relation(fields: [userId], references: [id])
+}
