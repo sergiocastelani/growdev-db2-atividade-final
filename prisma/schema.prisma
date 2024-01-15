@@ -14,6 +14,7 @@ model User {
   id Int @id @default(autoincrement())
   email String @unique
   name String
+  password String
 
   tweets Tweet[]
   likes Like[]
@@ -24,6 +25,7 @@ model Tweet {
   id Int @id @default(autoincrement())
   userId Int @map("user_id")
   repliedId Int? @map("replied_id")
+  content String
 
   user User @relation(fields: [userId], references: [id])
   repliedTweet Tweet? @relation("TweetReplies", fields: [repliedId], references: [id])
@@ -38,7 +40,7 @@ model Like {
   user User @relation(fields: [userId], references: [id])
   tweet Tweet @relation(fields: [tweetId], references: [id])
 
-  @@id([tweetId, userId])
+  @@id(name: "id", [tweetId, userId])
 }
 
 model Authorization {

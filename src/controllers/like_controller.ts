@@ -1,13 +1,34 @@
 import express from 'express'
+import { ApiError, processAndRespond } from './util';
+import { likeDAO } from '../daos/_setup';
+import { ILike } from '../models/like';
 
-const user_controller = express.Router()
-export default user_controller;
+const like_controller = express.Router()
+export default like_controller;
 
-user_controller.get('/user', (req, res) => {})
+like_controller.get('/like/:tweetId', async (req, res) => 
+{
+    processAndRespond(res, async () => 
+    {
+        
+        return { 
+            statusCode: 200, 
+            success: true, 
+            message: "Tweet found", 
+            data: null
+        }
+    });
+})
 
-user_controller.post('/user', (req, res) => {})
-
-user_controller.put('/user', (req, res) => {})
-
-user_controller.delete('/user', (req, res) => {})
+like_controller.post('/unlike/:tweetId', (req, res) => {
+    processAndRespond(res, async () => 
+    {
+        return { 
+            statusCode: 201, 
+            success: true, 
+            message: "Tweet created", 
+            data: {}
+        }
+    });
+})
 

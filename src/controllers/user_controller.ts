@@ -1,6 +1,6 @@
 import express from 'express'
 import { ApiError, processAndRespond } from './util';
-import { userDAO } from '../daos/config';
+import { userDAO } from '../daos/_setup';
 import { IUser } from '../models/user';
 
 const user_controller = express.Router()
@@ -10,11 +10,10 @@ user_controller.get('/user/:id', async (req, res) =>
 {
     processAndRespond(res, async () => 
     {
-        const user = await userDAO.getById(req.app.locals.repository, parseInt(req.params.id))
+        const user = await userDAO.getById(parseInt(req.params.id))
 
-        if (user === null) {
-           throw new ApiError(404, "User not found")
-        }
+        if (user === null)
+           throw new ApiError(404, "User not found");
 
         return { 
             statusCode: 200, 
@@ -32,13 +31,16 @@ user_controller.post('/user', (req, res) => {
 
         //validations
         if (!user.email)
-            throw new ApiError(400, "'email' field must be informed")
+            throw new ApiError(400, "'email' field must be informed");
 
         if (!user.name)
-            throw new ApiError(400, "'name' field must be informed")
+            throw new ApiError(400, "'name' field must be informed");
+
+        if (!user.password)
+            throw new ApiError(400, "'password' field must be informed");
 
         //
-        const newUser = await userDAO.insertUser(req.app.locals.repository, user);
+        const newUser = await userDAO.insert(user);
 
         return { 
             statusCode: 201, 
@@ -54,11 +56,12 @@ user_controller.put('/user/:id', (req, res) => {
     {
         const newUserData = req.body;
         newUserData.id = parseInt(req.params.id);
-        const updatedUser = await userDAO.updateUser(req.app.locals.repository, newUserData);
+ 
+        //
+        const updatedUser = await userDAO.update(newUserData);
 
-        if (updatedUser === null) {
-            throw new ApiError(404, "User not found")
-        }
+        if (updatedUser === null)
+            throw new ApiError(404, "User not found");
  
         return { 
             statusCode: 200,
@@ -73,11 +76,10 @@ user_controller.delete('/user/:id', (req, res) =>
 {
     processAndRespond(res, async () => 
     {
-        const user = await userDAO.deleteById(req.app.locals.repository, parseInt(req.params.id))
+        const user = await userDAO.deleteById(parseInt(req.params.id))
 
-        if (user === null) {
-           throw new ApiError(404, "User not found")
-        }
+        if (user === null)
+           throw new ApiError(404, "User not found");
 
         return { 
             statusCode: 200, 

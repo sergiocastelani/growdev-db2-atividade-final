@@ -3,6 +3,7 @@ export interface ITweet
     id: number;
     userId: number;
     repliedId: number | null;
+    content: string;
 }
 
 export class Tweet implements ITweet {
@@ -10,6 +11,7 @@ export class Tweet implements ITweet {
         public id: number,
         public userId: number,
         public repliedId: number | null,
+        public content: string,
     )
     {}
 }

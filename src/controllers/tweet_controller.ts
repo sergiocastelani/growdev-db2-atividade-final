@@ -1,13 +1,96 @@
 import express from 'express'
+import { ApiError, processAndRespond } from './util';
+import { tweetDAO } from '../daos/_setup';
+import { ITweet } from '../models/tweet';
 
-const user_controller = express.Router()
-export default user_controller;
+const tweet_controller = express.Router()
+export default tweet_controller;
 
-user_controller.get('/user', (req, res) => {})
+tweet_controller.get('/tweet/:id', async (req, res) => 
+{
+    processAndRespond(res, async () => 
+    {
+        const tweet = await tweetDAO.getById(parseInt(req.params.id))
 
-user_controller.post('/user', (req, res) => {})
+        if (tweet === null)
+           throw new ApiError(404, "Tweet not found");
 
-user_controller.put('/user', (req, res) => {})
+        return { 
+            statusCode: 200, 
+            success: true, 
+            message: "Tweet found", 
+            data: tweet
+        }
+    });
+})
 
-user_controller.delete('/user', (req, res) => {})
+tweet_controller.post('/tweet', (req, res) => {
+    processAndRespond(res, async () => 
+    {
+        const tweet : ITweet = req.body;
+
+        //validations
+        if (!tweet.content)
+            throw new ApiError(400, "'content' field must be informed");
+
+        if (!tweet.userId)
+            throw new ApiError(400, "'userId' field must be informed");
+
+        //
+        const newTweet = await tweetDAO.insert(tweet);
+
+        return { 
+            statusCode: 201, 
+            success: true, 
+            message: "Tweet created", 
+            data: newTweet
+        }
+    });
+})
+
+tweet_controller.put('/tweet/:id', (req, res) => {
+    processAndRespond(res, async () => 
+    {
+        const newData = req.body;
+        newData.id = parseInt(req.params.id);
+ 
+         //validations
+        if (!newData.content)
+            throw new ApiError(400, "'content' field must be informed");
+
+        if (!newData.userId)
+            throw new ApiError(400, "'userId' field must be informed");
+
+        //
+        const updatedTweet = await tweetDAO.update(newData);
+
+        if (updatedTweet === null)
+            throw new ApiError(404, "Tweet not found");
+ 
+        return { 
+            statusCode: 200,
+            success: true,
+            message: "Tweet updated",
+            data: updatedTweet
+        }
+    });
+})
+
+tweet_controller.delete('/tweet/:id', (req, res) => 
+{
+    processAndRespond(res, async () => 
+    {
+        const tweet = await tweetDAO.deleteById(parseInt(req.params.id))
+
+        if (tweet === null)
+           throw new ApiError(404, "Tweet not found");
+
+        return { 
+            statusCode: 200, 
+            success: true, 
+            message: "Tweet deleted", 
+            data: tweet
+        }
+    });
+})
 
