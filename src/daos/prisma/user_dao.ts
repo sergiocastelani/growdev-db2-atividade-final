@@ -10,13 +10,13 @@ export class UserDAO_Prisma
         if (userDb === null)
             return null;
 
-        return new User(userDb.id, userDb.email, userDb.name, userDb.password);
+        return new User(userDb.id, userDb.email, userDb.name, userDb.password, userDb.token);
     }
 
     async insert(user: User) : Promise<User>
     {
         const userDb = await repository.user.create({data: user});
-        return new User(userDb.id, userDb.email, userDb.name, userDb.password);
+        return new User(userDb.id, userDb.email, userDb.name, userDb.password, userDb.token);
     }
 
     async update(user: User) : Promise<User | null>
@@ -27,7 +27,7 @@ export class UserDAO_Prisma
 
         userDb = await repository.user.update({where: {id: user.id}, data: user})
 
-        return new User(userDb.id, userDb.email, userDb.name, userDb.password);
+        return new User(userDb.id, userDb.email, userDb.name, userDb.password, userDb.token);
     }
 
     async deleteById(id: number) : Promise<User | null>
@@ -38,7 +38,22 @@ export class UserDAO_Prisma
 
         await repository.user.delete({where: {id}});
 
-        return new User(userDb.id, userDb.email, userDb.name, userDb.password);
+        return new User(userDb.id, userDb.email, userDb.name, userDb.password, userDb.token);
     }
 
+    async getByEmail(email: string) : Promise<User | null> {
+        const userDb = await repository.user.findUnique({where: {email}});
+        if (userDb === null)
+            return null;
+
+        return new User(userDb.id, userDb.email, userDb.name, userDb.password, userDb.token);
+    }
+
+    async getByToken(token: string) : Promise<User | null> {
+        const userDb = await repository.user.findFirst({where: {token}});
+        if (userDb === null)
+            return null;
+
+        return new User(userDb.id, userDb.email, userDb.name, userDb.password, userDb.token);
+    }
 }
