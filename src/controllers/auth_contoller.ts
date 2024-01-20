@@ -3,6 +3,8 @@ import { ApiError, processAndRespond } from './util';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
 
+const AUTH_COOKIE_NAME = 'authorization';
+
 const auth_controller = express.Router()
 export default auth_controller;
 
@@ -32,7 +34,7 @@ auth_controller.post('/auth/login', async (req, res) =>
         await userDAO.update(user);
 
         //
-        res.cookie('authorization', user.token);
+        res.cookie(AUTH_COOKIE_NAME, user.token);
 
         return { 
             statusCode: 200, 
@@ -62,7 +64,7 @@ auth_controller.post('/auth/logout', (req, res) => {
         user.token = null;
         await userDAO.update(user);
 
-        res.clearCookie('authorization');
+        res.clearCookie(AUTH_COOKIE_NAME);
 
         return { 
             statusCode: 200, 
