@@ -2,7 +2,6 @@ import express from 'express'
 import { ApiError, processAndRespond } from './util';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
-import authMiddleware from '../auth_middleware';
 
 const auth_controller = express.Router()
 export default auth_controller;
