@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import cookies from 'cookie-parser';
 import user_controller from './controllers/user_controller';
 import tweet_controller from './controllers/tweet_controller';
 import like_controller from './controllers/like_controller';
@@ -9,7 +8,6 @@ import auth_controller from './controllers/auth_contoller';
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(cookies());
 
 app.use(user_controller);
 app.use(tweet_controller);

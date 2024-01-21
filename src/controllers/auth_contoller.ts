@@ -2,8 +2,7 @@ import express from 'express'
 import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
-
-const AUTH_COOKIE_NAME = 'authorization';
+import { AUTH_TOKEN_NAME } from '../auth/auth_middleware';
 
 const auth_controller = express.Router()
 export default auth_controller;
@@ -24,14 +23,11 @@ auth_controller.post('/auth/login', async (req, res) =>
         //
         const user = await userDAO.getByEmail(email);
         if(!user || user.password !== password)
-            throw new ApiError(401, "Invalid user/password");
+            throw new ApiError(400, "Invalid user/password");
 
         //
         user.token = randomUUID();
         await userDAO.update(user);
-
-        //
-        res.cookie(AUTH_COOKIE_NAME, user.token);
 
         return { 
             statusCode: 200, 
@@ -41,6 +37,7 @@ auth_controller.post('/auth/login', async (req, res) =>
                 id: user.id, 
                 email: user.email, 
                 name: user.name,
+                token: user.token,
             }
         }
     });
@@ -49,19 +46,17 @@ auth_controller.post('/auth/login', async (req, res) =>
 auth_controller.post('/auth/logout', (req, res) => {
     processAndRespond(res, async () => 
     {
-        const { authorization } = req.cookies;
+        const authToken = req.header(AUTH_TOKEN_NAME);
 
-        if(!authorization) 
+        if(!authToken) 
             throw new ApiError(404, "Missing auth token");
     
-        const user = await userDAO.getByToken(authorization);
+        const user = await userDAO.getByToken(authToken);
         if(!user) 
             throw new ApiError(404, "User not logged");
 
         user.token = null;
         await userDAO.update(user);
-
-        res.clearCookie(AUTH_COOKIE_NAME);
 
         return { 
             statusCode: 200, 

@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import { userDAO } from "../daos/_setup";
 
+export const AUTH_TOKEN_NAME = 'authorization';
+
 export async function authMiddleware(req: Request, res: Response, next: any)
 {
-    const { authorization } = req.cookies;
+    const authToken = req.header(AUTH_TOKEN_NAME);
 
-    if(!authorization) 
+    if(!authToken) 
     {
         res.status(401).json({ 
             success: false, 
@@ -15,7 +17,7 @@ export async function authMiddleware(req: Request, res: Response, next: any)
         return;
     }
 
-    const user = await userDAO.getByToken(authorization);
+    const user = await userDAO.getByToken(authToken);
     if(!user) 
     {
         res.status(401).json({ 

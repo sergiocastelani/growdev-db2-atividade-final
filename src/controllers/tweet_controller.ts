@@ -19,7 +19,7 @@ tweet_controller.get('/tweet/all', authMiddleware, async (req, res) =>
         return { 
             statusCode: 200, 
             success: true, 
-            message: "Tweets found", 
+            message: "Found tweets", 
             data: tweets
         }
     });
