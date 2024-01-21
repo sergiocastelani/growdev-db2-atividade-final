@@ -3,6 +3,16 @@ import { repository } from "./_setup";
 
 export class TweetDAO_Prisma 
 {
+    async getAll(page: number, limit: number) : Promise<Tweet[]>
+    {
+        const dbData = await repository.tweet.findMany({
+            skip: (page - 1) * limit,
+            take: limit,
+        });
+
+        return dbData.map((e) => new Tweet(e.id, e.userId, e.repliedId, e.content));
+    }
+
     async getById(id: number) : Promise<Tweet | null>
     {
         const dbData = await repository.tweet.findUnique({ where: { id } });

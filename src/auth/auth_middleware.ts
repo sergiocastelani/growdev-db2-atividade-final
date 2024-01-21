@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { userDAO } from "./daos/_setup";
+import { userDAO } from "../daos/_setup";
 
-export default async function authMiddleware(req: Request, res: Response, next: any)
+export async function authMiddleware(req: Request, res: Response, next: any)
 {
     const { authorization } = req.cookies;
 

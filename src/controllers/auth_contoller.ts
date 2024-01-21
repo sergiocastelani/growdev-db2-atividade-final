@@ -1,5 +1,5 @@
 import express from 'express'
-import { ApiError, processAndRespond } from './util';
+import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
 
@@ -23,11 +23,8 @@ auth_controller.post('/auth/login', async (req, res) =>
 
         //
         const user = await userDAO.getByEmail(email);
-        if(!user)
-            throw new ApiError(404, "User not found");
-
-        if(user.password !== password)
-            throw new ApiError(401, "Invalid password");
+        if(!user || user.password !== password)
+            throw new ApiError(401, "Invalid user/password");
 
         //
         user.token = randomUUID();
