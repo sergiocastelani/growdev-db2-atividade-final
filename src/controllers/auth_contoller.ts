@@ -3,6 +3,7 @@ import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
 import { AUTH_TOKEN_NAME } from '../auth/auth_middleware';
+import { UserAuthInfo } from '../models/user_auth_info';
 
 const auth_controller = express.Router()
 export default auth_controller;
@@ -33,12 +34,7 @@ auth_controller.post('/auth/login', async (req, res) =>
             statusCode: 200, 
             success: true, 
             message: "Loggin successful", 
-            data: {
-                id: user.id, 
-                email: user.email, 
-                name: user.name,
-                token: user.token,
-            }
+            data: new UserAuthInfo(user.id, user.email, user.name, user.token)
         }
     });
 })
