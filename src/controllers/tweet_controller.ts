@@ -12,7 +12,7 @@ tweet_controller.get('/tweet/all', authMiddleware, async (req, res) =>
     processAndRespond(res, async () => 
     {
         const page = Number(req.query.page ?? 1);
-        const limit = Number(req.query.limit ?? 20);
+        const limit = Number(req.query.limit ?? 10000);
 
         const tweets = await tweetDAO.getAll(page, limit)
 
