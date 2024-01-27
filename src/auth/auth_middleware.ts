@@ -28,5 +28,7 @@ export async function authMiddleware(req: Request, res: Response, next: any)
         return;
     }
 
+    req.app.locals.user = user;
+
     next();
 }

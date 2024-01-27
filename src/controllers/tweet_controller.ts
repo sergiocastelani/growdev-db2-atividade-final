@@ -43,7 +43,7 @@ tweet_controller.get('/tweet/:id', async (req, res) =>
     });
 })
 
-tweet_controller.post('/tweet', (req, res) => {
+tweet_controller.post('/tweet', authMiddleware, (req, res) => {
     processAndRespond(res, async () => 
     {
         const tweet : ITweet = req.body;
@@ -52,8 +52,7 @@ tweet_controller.post('/tweet', (req, res) => {
         if (!tweet.content)
             throw new ApiError(400, "'content' field must be informed");
 
-        if (!tweet.userId)
-            throw new ApiError(400, "'userId' field must be informed");
+        tweet.userId = req.app.locals.user.id;
 
         //
         const newTweet = await tweetDAO.insert(tweet);
