@@ -12,7 +12,7 @@ like_controller.post('/like/:tweetId', authMiddleware, async (req, res) =>
 {
     processAndRespond(res, async () => 
     {
-        const user : User = req.app.locals.user;
+        const user : User = res.locals.user;
 
         const likeData = await likeDAO.insert(new Like(parseInt(req.params.tweetId), user.id));
 
@@ -28,7 +28,7 @@ like_controller.post('/like/:tweetId', authMiddleware, async (req, res) =>
 like_controller.delete('/like/:tweetId', authMiddleware, (req, res) => {
     processAndRespond(res, async () => 
     {
-        const user : User = req.app.locals.user;
+        const user : User = res.locals.user;
 
         const likeData = await likeDAO.deleteById(parseInt(req.params.tweetId), user.id);
         if (likeData === null)

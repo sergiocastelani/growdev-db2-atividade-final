@@ -89,6 +89,23 @@ export class UserDAO_Prisma
         );
    }
 
+
+    async getByUsername(username: string) : Promise<User | null> {
+        const userDb = await repository.user.findUnique({where: {username}});
+        if (userDb === null)
+            return null;
+
+         return new User(
+            userDb.id, 
+            userDb.username, 
+            userDb.email, 
+            userDb.name, 
+            userDb.password, 
+            userDb.token,
+            userDb.pictureUrl
+        );
+   }
+
     async getByToken(token: string) : Promise<User | null> {
         const userDb = await repository.user.findFirst({where: {token}});
         if (userDb === null)

@@ -43,6 +43,14 @@ user_controller.post('/user', (req, res) => {
         if (!user.password)
             throw new ApiError(400, "'password' field must be informed");
 
+        const existingUserEmail = await userDAO.getByEmail(user.email);
+        if(existingUserEmail)
+            throw new ApiError(400, "This email is already being used");
+
+        const existingUsername = await userDAO.getByUsername(user.username);
+        if(existingUsername)
+            throw new ApiError(400, "This username is already being used");
+
         //
         const newUser = await userDAO.insert(user);
 
