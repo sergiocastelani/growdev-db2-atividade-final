@@ -14,7 +14,7 @@ tweet_controller.get('/tweet/all', async (req, res) =>
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit ?? 10000);
 
-        const tweets = await tweetDAO.getAll(page, limit)
+        const tweets = await tweetDAO.getAllForDisplay(page, limit)
 
         return { 
             statusCode: 200, 
