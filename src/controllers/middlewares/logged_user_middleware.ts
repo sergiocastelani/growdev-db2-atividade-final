@@ -7,11 +7,11 @@ export async function loggedUserMiddleware(req: Request, res: Response, next: an
     const authToken = req.header(AUTH_TOKEN_NAME);
 
     if(!authToken) 
-        return;
+        return next();
 
     const user = await userDAO.getByToken(authToken);
     if(!user) 
-        return;
+        return next();
 
     req.app.locals.user = user;
 
