@@ -2,6 +2,7 @@ import express from 'express'
 import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { IUser } from '../models/user';
+import { UserSecureInfo } from '../models/user_secure_info';
 
 const user_controller = express.Router()
 export default user_controller;
@@ -30,6 +31,9 @@ user_controller.post('/user', (req, res) => {
         const user : IUser = req.body;
 
         //validations
+        if (!user.username)
+            throw new ApiError(400, "'username' field must be informed");
+
         if (!user.email)
             throw new ApiError(400, "'email' field must be informed");
 
@@ -46,7 +50,14 @@ user_controller.post('/user', (req, res) => {
             statusCode: 201, 
             success: true, 
             message: "User created", 
-            data: newUser
+            data: new UserSecureInfo(
+                newUser.id,
+                newUser.username,
+                newUser.email,
+                newUser.name,
+                newUser.token,
+                newUser.pictureUrl
+            )
         }
     });
 })

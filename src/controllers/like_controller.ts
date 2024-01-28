@@ -10,25 +10,14 @@ like_controller.get('/like/:tweetId', async (req, res) =>
 {
     processAndRespond(res, async () => 
     {
-        
-        return { 
-            statusCode: 200, 
-            success: true, 
-            message: "Tweet found", 
-            data: null
-        }
+        throw new ApiError(501, "Not implemented");
     });
 })
 
 like_controller.post('/unlike/:tweetId', (req, res) => {
     processAndRespond(res, async () => 
     {
-        return { 
-            statusCode: 201, 
-            success: true, 
-            message: "Tweet created", 
-            data: {}
-        }
+        throw new ApiError(501, "Not implemented");
     });
 })
 

@@ -12,10 +12,12 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
+  username String @unique
   email String @unique
   name String
   password String
   token String?
+  pictureUrl String? @map("picture_url")
 
   tweets Tweet[]
   likes Like[]
@@ -26,6 +28,7 @@ model Tweet {
   userId Int @map("user_id")
   repliedId Int? @map("replied_id")
   content String
+  createdAt DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id])
   repliedTweet Tweet? @relation("TweetReplies", fields: [repliedId], references: [id])

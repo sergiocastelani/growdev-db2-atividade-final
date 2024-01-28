@@ -10,7 +10,7 @@ export class TweetDAO_Prisma
             take: limit,
         });
 
-        return dbData.map((e) => new Tweet(e.id, e.userId, e.repliedId, e.content));
+        return dbData.map((e) => new Tweet(e.id, e.userId, e.repliedId, e.content, e.createdAt));
     }
 
     async getById(id: number) : Promise<Tweet | null>
@@ -20,13 +20,14 @@ export class TweetDAO_Prisma
         if (dbData === null)
             return null;
 
-        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content);
+        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content, dbData.createdAt);
     }
 
     async insert(tweet: Tweet) : Promise<Tweet>
     {
+        tweet.createdAt = new Date();
         const dbData = await repository.tweet.create({data: tweet});
-        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content);
+        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content, dbData.createdAt);
     }
 
     async update(tweet: Tweet) : Promise<Tweet | null>
@@ -35,9 +36,11 @@ export class TweetDAO_Prisma
         if (dbData === null)
             return null;
 
+        tweet.createdAt = dbData.createdAt;
+        
         dbData = await repository.tweet.update({where: {id: tweet.id}, data: tweet})
 
-        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content);
+        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content, dbData.createdAt);
     }
 
     async deleteById(id: number) : Promise<Tweet | null>
@@ -48,6 +51,6 @@ export class TweetDAO_Prisma
 
         await repository.tweet.delete({where: {id}});
 
-        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content);
+        return new Tweet(dbData.id, dbData.userId, dbData.repliedId, dbData.content, dbData.createdAt);
     }
 }

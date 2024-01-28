@@ -3,7 +3,7 @@ import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
 import { AUTH_TOKEN_NAME } from '../auth/auth_middleware';
-import { UserAuthInfo } from '../models/user_auth_info';
+import { UserSecureInfo } from '../models/user_secure_info';
 
 const auth_controller = express.Router()
 export default auth_controller;
@@ -14,27 +14,31 @@ auth_controller.post('/auth/login', async (req, res) =>
     {
         const { email, password } = req.body;
 
-        //
         if(!email)
             throw new ApiError(400, "'email' field is required");
 
         if(!password)
             throw new ApiError(400, "'password' field is required");
 
-        //
         const user = await userDAO.getByEmail(email);
         if(!user || user.password !== password)
             throw new ApiError(400, "Invalid user/password");
 
-        //
         user.token = randomUUID();
         await userDAO.update(user);
 
         return { 
             statusCode: 200, 
             success: true, 
-            message: "Loggin successful", 
-            data: new UserAuthInfo(user.id, user.email, user.name, user.token)
+            message: "Logged in", 
+            data: new UserSecureInfo(
+                user.id, 
+                user.username, 
+                user.email, 
+                user.name, 
+                user.token,
+                user.pictureUrl
+            )
         }
     });
 })
@@ -57,7 +61,7 @@ auth_controller.post('/auth/logout', (req, res) => {
         return { 
             statusCode: 200, 
             success: true, 
-            message: "Logout successful", 
+            message: "Logged out", 
             data: null
         }
     });

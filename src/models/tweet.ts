@@ -4,6 +4,7 @@ export interface ITweet
     userId: number;
     repliedId: number | null;
     content: string;
+    createdAt: Date;
 }
 
 export class Tweet implements ITweet {
@@ -12,6 +13,7 @@ export class Tweet implements ITweet {
         public userId: number,
         public repliedId: number | null,
         public content: string,
+        public createdAt: Date
     )
     {}
 }

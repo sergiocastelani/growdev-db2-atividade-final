@@ -43,7 +43,8 @@ tweet_controller.get('/tweet/:id', async (req, res) =>
     });
 })
 
-tweet_controller.post('/tweet', authMiddleware, (req, res) => {
+tweet_controller.post('/tweet', authMiddleware, (req, res) => 
+{
     processAndRespond(res, async () => 
     {
         const tweet : ITweet = req.body;
@@ -66,7 +67,8 @@ tweet_controller.post('/tweet', authMiddleware, (req, res) => {
     });
 })
 
-tweet_controller.put('/tweet/:id', (req, res) => {
+tweet_controller.put('/tweet/:id', (req, res) => 
+{
     processAndRespond(res, async () => 
     {
         const newData = req.body;

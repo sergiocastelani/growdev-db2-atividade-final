@@ -1,21 +1,19 @@
-export interface IUser 
+export interface IUserSecureInfo 
 {
     id: number;
     username: string;
     email: string;
     name: string;
-    password: string;
     token: string | null;
     pictureUrl: string | null;
 }
 
-export class User implements IUser {
+export class UserSecureInfo implements IUserSecureInfo {
     constructor(
         public id: number,
         public username: string,
         public email: string,
         public name: string,
-        public password: string,
         public token: string | null,
         public pictureUrl: string | null,
     )
