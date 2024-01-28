@@ -5,8 +5,18 @@ import { repository } from "./_setup";
 
 export class TweetDAO_Prisma 
 {
-    async getAllForDisplay(page: number, limit: number) : Promise<TweetDisplay[]>
+    async getAllForDisplay(page: number, limit: number, userIdLiked?: Number) : Promise<TweetDisplay[]>
     {
+        let likesFilter : any = false;
+        if (userIdLiked)
+        {
+            likesFilter = {
+                where: {
+                    userId: userIdLiked,
+                }
+            };
+        }
+
         const dbData = await repository.tweet.findMany({
             skip: (page - 1) * limit,
             take: limit,
@@ -19,13 +29,14 @@ export class TweetDAO_Prisma
                 content: true,
                 createdAt: true,
                 user: true,
+                likes: likesFilter,
                 _count: {
                     select: {
                         replies: true,
                         likes: true,
                     }
                 }
-            }
+            },
         });
 
         return dbData.map((e) => new TweetDisplay(
@@ -36,6 +47,7 @@ export class TweetDAO_Prisma
             e._count.replies,
             e._count.likes,
             UserDisplay.FromUser(e.user),
+            e.likes?.length > 0 ?? false,
         ));
     }
 

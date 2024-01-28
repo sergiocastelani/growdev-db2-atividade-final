@@ -9,6 +9,7 @@ export class TweetDisplay {
         public totalReplies: number,
         public totalLikes: number,
         public user: UserDisplay,
+        public liked: boolean,
     )
     {}
 }

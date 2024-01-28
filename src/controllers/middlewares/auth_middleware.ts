@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { userDAO } from "../daos/_setup";
+import { userDAO } from "../../daos/_setup";
 
 export const AUTH_TOKEN_NAME = 'authorization';
 

@@ -2,19 +2,20 @@ import express from 'express'
 import { ApiError, processAndRespond } from './_controller_utils';
 import { tweetDAO } from '../daos/_setup';
 import { ITweet } from '../models/tweet';
-import { authMiddleware } from '../auth/auth_middleware';
+import { authMiddleware } from './middlewares/auth_middleware';
+import { loggedUserMiddleware } from './middlewares/logged_user_middleware';
 
 const tweet_controller = express.Router()
 export default tweet_controller;
 
-tweet_controller.get('/tweet/all', async (req, res) => 
+tweet_controller.get('/tweet/all', loggedUserMiddleware, async (req, res) => 
 {
     processAndRespond(res, async () => 
     {
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit ?? 10000);
 
-        const tweets = await tweetDAO.getAllForDisplay(page, limit)
+        const tweets = await tweetDAO.getAllForDisplay(page, limit, req.app.locals.user?.id);
 
         return { 
             statusCode: 200, 
