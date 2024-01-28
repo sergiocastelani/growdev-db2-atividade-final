@@ -5,7 +5,7 @@ import { repository } from "./_setup";
 
 export class TweetDAO_Prisma 
 {
-    async getAllForDisplay(page: number, limit: number, userIdLiked?: Number) : Promise<TweetDisplay[]>
+    async getAllForDisplay(page: number, limit: number, userIdLiked?: Number, userIdFilter?: number) : Promise<TweetDisplay[]>
     {
         let likesFilter : any = false;
         if (userIdLiked)
@@ -37,6 +37,9 @@ export class TweetDAO_Prisma
                     }
                 }
             },
+            where: {
+                userId: userIdFilter,
+            }
         });
 
         return dbData.map((e) => new TweetDisplay(

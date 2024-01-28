@@ -14,8 +14,29 @@ tweet_controller.get('/tweet/all', loggedUserMiddleware, async (req, res) =>
     {
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit ?? 10000);
+        const likedUserId = req.app.locals.user?.id;
 
-        const tweets = await tweetDAO.getAllForDisplay(page, limit, req.app.locals.user?.id);
+        const tweets = await tweetDAO.getAllForDisplay(page, limit, likedUserId);
+
+        return { 
+            statusCode: 200, 
+            success: true, 
+            message: "Found tweets", 
+            data: tweets
+        }
+    });
+})
+
+tweet_controller.get('/tweet/user/:userId', loggedUserMiddleware, async (req, res) => 
+{
+    processAndRespond(res, async () => 
+    {
+        const page = Number(req.query.page ?? 1);
+        const limit = Number(req.query.limit ?? 10000);
+        const likedUserId = req.app.locals.user?.id;
+        const userIdFilter = parseInt(req.params.userId);
+
+        const tweets = await tweetDAO.getAllForDisplay(page, limit, likedUserId, userIdFilter);
 
         return { 
             statusCode: 200, 
