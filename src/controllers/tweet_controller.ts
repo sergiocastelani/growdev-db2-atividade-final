@@ -14,7 +14,7 @@ tweet_controller.get('/tweet/all', loggedUserMiddleware, async (req, res) =>
     {
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit ?? 10000);
-        const likedUserId = req.app.locals.user?.id;
+        const likedUserId = res.locals.user?.id;
 
         const tweets = await tweetDAO.getAllForDisplay(page, limit, likedUserId);
 
@@ -33,7 +33,7 @@ tweet_controller.get('/tweet/user/:userId', loggedUserMiddleware, async (req, re
     {
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit ?? 10000);
-        const likedUserId = req.app.locals.user?.id;
+        const likedUserId = res.locals.user?.id;
         const userIdFilter = parseInt(req.params.userId);
 
         const tweets = await tweetDAO.getAllForDisplay(page, limit, likedUserId, userIdFilter);
@@ -75,7 +75,7 @@ tweet_controller.post('/tweet', authMiddleware, (req, res) =>
         if (!tweet.content)
             throw new ApiError(400, "'content' field must be informed");
 
-        tweet.userId = req.app.locals.user.id;
+        tweet.userId = res.locals.user.id;
 
         //
         const newTweet = await tweetDAO.insert(tweet);

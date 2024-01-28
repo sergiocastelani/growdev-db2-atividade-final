@@ -13,7 +13,7 @@ export async function loggedUserMiddleware(req: Request, res: Response, next: an
     if(!user) 
         return next();
 
-    req.app.locals.user = user;
+    res.locals.user = user;
 
     next();
 }
