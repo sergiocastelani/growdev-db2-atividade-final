@@ -7,7 +7,7 @@ import { authMiddleware } from '../auth/auth_middleware';
 const tweet_controller = express.Router()
 export default tweet_controller;
 
-tweet_controller.get('/tweet/all', authMiddleware, async (req, res) => 
+tweet_controller.get('/tweet/all', async (req, res) => 
 {
     processAndRespond(res, async () => 
     {
