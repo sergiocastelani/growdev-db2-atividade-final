@@ -3,6 +3,7 @@ import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { IUser } from '../models/user';
 import { UserSecureInfo } from '../models/user_secure_info';
+import { randomUUID } from 'crypto';
 
 const user_controller = express.Router()
 export default user_controller;
@@ -52,6 +53,7 @@ user_controller.post('/user', (req, res) => {
             throw new ApiError(400, "This username is already being used");
 
         //
+        user.token = randomUUID();
         const newUser = await userDAO.insert(user);
 
         return { 
