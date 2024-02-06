@@ -164,3 +164,27 @@ tweet_controller.post('/reply/:tweetId', authMiddleware, (req, res) =>
         }
     });
 })
+
+tweet_controller.get('/tweet/replies/:tweetId', async (req, res) => 
+{
+    processAndRespond(res, async () => 
+    {
+        const page = Number(req.query.page ?? 1);
+        const limit = Number(req.query.limit ?? 10000);
+        const likedUserId = res.locals.user?.id;
+
+        const tweets = await tweetDAO.getRepliesForDisplay(
+            parseInt(req.params.tweetId), 
+            page, 
+            limit, 
+            likedUserId
+        );
+
+        return { 
+            statusCode: 200, 
+            success: true, 
+            message: "Found tweets",
+            data: tweets
+        }
+    });
+})
