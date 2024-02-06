@@ -2,7 +2,7 @@ import express from 'express'
 import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
-import { AUTH_TOKEN_NAME } from './middlewares/auth_middleware';
+import { AUTH_TOKEN_NAME, authMiddleware } from './middlewares/auth_middleware';
 import { UserSecureInfo } from '../models/user_secure_info';
 
 const auth_controller = express.Router()
@@ -67,3 +67,6 @@ auth_controller.post('/auth/logout', (req, res) => {
     });
 })
 
+auth_controller.get('/auth/check', authMiddleware, (req, res) => {
+    return res.status(200).json({});
+})

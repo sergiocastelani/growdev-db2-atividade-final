@@ -136,3 +136,31 @@ tweet_controller.delete('/tweet/:id', (req, res) =>
     });
 })
 
+tweet_controller.post('/reply/:tweetId', authMiddleware, (req, res) => 
+{
+    processAndRespond(res, async () => 
+    {
+        const tweet : ITweet = req.body;
+
+        //validations
+        if (!tweet.content)
+            throw new ApiError(400, "'content' field must be informed");
+
+        const repliedTweet = await tweetDAO.getById(parseInt(req.params.tweetId));
+        if (!repliedTweet)
+            throw new ApiError(400, "The replied tweet doesn't exist");
+
+        //
+        tweet.userId = res.locals.user.id;
+        tweet.repliedId = repliedTweet.id;
+
+        const newTweet = await tweetDAO.insert(tweet);
+
+        return { 
+            statusCode: 201, 
+            success: true, 
+            message: "Tweet created", 
+            data: newTweet
+        }
+    });
+})
