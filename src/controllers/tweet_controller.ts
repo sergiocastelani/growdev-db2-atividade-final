@@ -165,7 +165,7 @@ tweet_controller.post('/reply/:tweetId', authMiddleware, (req, res) =>
     });
 })
 
-tweet_controller.get('/tweet/replies/:tweetId', async (req, res) => 
+tweet_controller.get('/tweet/replies/:tweetId', loggedUserMiddleware, async (req, res) => 
 {
     processAndRespond(res, async () => 
     {
