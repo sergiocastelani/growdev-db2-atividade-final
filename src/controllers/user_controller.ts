@@ -1,5 +1,5 @@
 import express from 'express'
-import { ApiError, processAndRespond } from './_controller_utils';
+import { ApiError, processAndRespond } from './controller_utils';
 import { userDAO } from '../daos/_setup';
 import { IUser, User } from '../models/user';
 import { UserSecureInfo } from '../models/user_secure_info';

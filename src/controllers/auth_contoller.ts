@@ -1,5 +1,5 @@
 import express from 'express'
-import { ApiError, processAndRespond } from './_controller_utils';
+import { ApiError, processAndRespond } from './controller_utils';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
 import { authMiddleware } from './middlewares/auth_middleware';
