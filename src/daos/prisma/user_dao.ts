@@ -16,7 +16,6 @@ export class UserDAO_Prisma
             userDb.email, 
             userDb.name, 
             userDb.password, 
-            userDb.token,
             userDb.pictureUrl
         );
     }
@@ -30,7 +29,6 @@ export class UserDAO_Prisma
             userDb.email, 
             userDb.name, 
             userDb.password, 
-            userDb.token,
             userDb.pictureUrl
         );
     }
@@ -49,7 +47,6 @@ export class UserDAO_Prisma
             userDb.email, 
             userDb.name, 
             userDb.password, 
-            userDb.token,
             userDb.pictureUrl
         );
     }
@@ -68,7 +65,6 @@ export class UserDAO_Prisma
             userDb.email, 
             userDb.name, 
             userDb.password, 
-            userDb.token,
             userDb.pictureUrl
         );
     }
@@ -84,7 +80,6 @@ export class UserDAO_Prisma
             userDb.email, 
             userDb.name, 
             userDb.password, 
-            userDb.token,
             userDb.pictureUrl
         );
    }
@@ -101,24 +96,7 @@ export class UserDAO_Prisma
             userDb.email, 
             userDb.name, 
             userDb.password, 
-            userDb.token,
             userDb.pictureUrl
         );
    }
-
-    async getByToken(token: string) : Promise<User | null> {
-        const userDb = await repository.user.findFirst({where: {token}});
-        if (userDb === null)
-            return null;
-
-        return new User(
-            userDb.id, 
-            userDb.username, 
-            userDb.email, 
-            userDb.name, 
-            userDb.password, 
-            userDb.token,
-            userDb.pictureUrl
-        );
-    }
 }

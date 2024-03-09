@@ -55,7 +55,6 @@ user_controller.post('/user', (req, res) => {
             throw new ApiError(400, "This username is already being used");
 
         //
-        user.token = randomUUID();
         const newUser = await userDAO.insert(user);
 
         return { 
@@ -67,7 +66,6 @@ user_controller.post('/user', (req, res) => {
                 newUser.username,
                 newUser.email,
                 newUser.name,
-                newUser.token,
                 newUser.pictureUrl
             )
         }
@@ -115,7 +113,6 @@ user_controller.put('/user', authMiddleware, (req, res) =>
             newUserData.email, 
             newUserData.name, 
             newUserData.newPassword ?? user.password, 
-            user.token, 
             newUserData.pictureUrl ?? null
         );
             
@@ -133,13 +130,13 @@ user_controller.put('/user', authMiddleware, (req, res) =>
                 updatedUser.username,
                 updatedUser.email,
                 updatedUser.name,
-                updatedUser.token,
                 updatedUser.pictureUrl
             )
         }
     });
 })
 
+/*
 user_controller.delete('/user/:id', (req, res) => 
 {
     processAndRespond(res, async () => 
@@ -157,4 +154,5 @@ user_controller.delete('/user/:id', (req, res) =>
         }
     });
 })
+*/
 
