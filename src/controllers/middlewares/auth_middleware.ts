@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import { userDAO } from "../../daos/_setup";
 
-export const AUTH_TOKEN_NAME = 'authorization';
-
 export async function authMiddleware(req: Request, res: Response, next: any)
 {
-    const authToken = req.header(AUTH_TOKEN_NAME);
+    const authToken = req.header(process.env.AUTH_TOKEN_NAME!);
 
     if(!authToken) 
     {

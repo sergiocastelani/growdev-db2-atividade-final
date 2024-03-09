@@ -2,7 +2,7 @@ import express from 'express'
 import { ApiError, processAndRespond } from './_controller_utils';
 import { userDAO } from '../daos/_setup';
 import { randomUUID } from 'crypto';
-import { AUTH_TOKEN_NAME, authMiddleware } from './middlewares/auth_middleware';
+import { authMiddleware } from './middlewares/auth_middleware';
 import { UserSecureInfo } from '../models/user_secure_info';
 
 const auth_controller = express.Router()
@@ -46,7 +46,7 @@ auth_controller.post('/auth/login', async (req, res) =>
 auth_controller.post('/auth/logout', (req, res) => {
     processAndRespond(res, async () => 
     {
-        const authToken = req.header(AUTH_TOKEN_NAME);
+        const authToken = req.header(process.env.AUTH_TOKEN_NAME!);
 
         if(!authToken) 
             throw new ApiError(404, "Missing auth token");
