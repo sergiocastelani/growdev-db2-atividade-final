@@ -6,6 +6,7 @@ import { UserSecureInfo } from '../models/user_secure_info';
 import { randomUUID } from 'crypto';
 import { UserUpdateRequest } from '../models/requests/user_update_request';
 import { authMiddleware } from './middlewares/auth_middleware';
+import { AuthServive } from '../services/auth_service';
 
 const user_controller = express.Router()
 export default user_controller;
@@ -121,17 +122,13 @@ user_controller.put('/user', authMiddleware, (req, res) =>
         if (updatedUser === null)
             throw new ApiError(404, "User not found");
  
+        const token = new AuthServive().createToken(updatedUser);
+
         return { 
             statusCode: 200,
             success: true,
             message: "User updated",
-            data: new UserSecureInfo(
-                updatedUser.id,
-                updatedUser.username,
-                updatedUser.email,
-                updatedUser.name,
-                updatedUser.pictureUrl
-            )
+            data: token
         }
     });
 })

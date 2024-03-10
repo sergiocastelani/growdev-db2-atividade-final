@@ -12,7 +12,7 @@ export async function loggedUserMiddleware(req: Request, res: Response, next: an
     const validateResult = authServive.validateToken(authToken ?? "");
 
     if(!validateResult.success) 
-        next();
+        return next();
 
     const user = await userDAO.getById(validateResult.data!.id);
     if(user) 
