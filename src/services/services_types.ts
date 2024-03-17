@@ -23,3 +23,12 @@ export function SuccessResult<T>(message: string, data?: T, statusCode: number =
         data
     };
 }
+
+export function ErrorResult<T>(statusCode: number, message: string) : ServiceResponse<T> 
+{
+    return {
+        success: false,
+        message,
+        statusCode
+    };
+}

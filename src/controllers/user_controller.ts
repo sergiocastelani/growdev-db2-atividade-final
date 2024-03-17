@@ -1,13 +1,12 @@
 import express from 'express'
 import { processAndRespond } from './controller_utils';
-import { userDAO } from '../daos/_setup';
-import { IUser, User } from '../models/user';
+import { IUser } from '../models/user';
 import { UserSecureInfo } from '../models/user_secure_info';
-import { randomUUID } from 'crypto';
 import { UserUpdateRequest } from '../models/requests/user_update_request';
 import { authMiddleware } from './middlewares/auth_middleware';
 import { AuthServive } from '../services/auth_service';
-import { ApiError } from '../services/services_types';
+import { ApiError, SuccessResult } from '../services/services_types';
+import { UserService } from '../services/user_service';
 
 const user_controller = express.Router()
 export default user_controller;
@@ -16,17 +15,7 @@ user_controller.get('/user/:id', async (req, res) =>
 {
     processAndRespond(res, async () => 
     {
-        const user = await userDAO.getById(parseInt(req.params.id))
-
-        if (user === null)
-           throw new ApiError(404, "User not found");
-
-        return { 
-            statusCode: 200, 
-            success: true, 
-            message: "User found", 
-            data: user
-        }
+        return await (new UserService()).getById(parseInt(req.params.id))
     });
 })
 
@@ -35,42 +24,19 @@ user_controller.post('/user', (req, res) => {
     {
         const user : IUser = req.body;
 
-        //validations
-        if (!user.username)
-            throw new ApiError(400, "'username' field must be informed");
+        const userResult = await (new UserService()).create(user);
+        if (!userResult.success)
+            return userResult;
 
-        if (!user.email)
-            throw new ApiError(400, "'email' field must be informed");
+        const userSecureInfo = new UserSecureInfo(
+            userResult.data!.id,
+            userResult.data!.username,
+            userResult.data!.email,
+            userResult.data!.name,
+            userResult.data!.pictureUrl
+        );
 
-        if (!user.name)
-            throw new ApiError(400, "'name' field must be informed");
-
-        if (!user.password)
-            throw new ApiError(400, "'password' field must be informed");
-
-        const existingUserEmail = await userDAO.getByEmail(user.email);
-        if(existingUserEmail)
-            throw new ApiError(400, "This email is already being used");
-
-        const existingUsername = await userDAO.getByUsername(user.username);
-        if(existingUsername)
-            throw new ApiError(400, "This username is already being used");
-
-        //
-        const newUser = await userDAO.insert(user);
-
-        return { 
-            statusCode: 201, 
-            success: true, 
-            message: "User created", 
-            data: new UserSecureInfo(
-                newUser.id,
-                newUser.username,
-                newUser.email,
-                newUser.name,
-                newUser.pictureUrl
-            )
-        }
+        return SuccessResult(userResult.message, userSecureInfo, 201);
     });
 })
 
@@ -81,49 +47,12 @@ user_controller.put('/user', authMiddleware, (req, res) =>
         const newUserData : UserUpdateRequest = req.body;
         const user = res.locals.user;
  
-        //validations
-        if (!newUserData.username)
-            throw new ApiError(400, "'username' field must be informed");
+        const updateResult = await new UserService().update(user, newUserData);
 
-        if (!newUserData.email)
-            throw new ApiError(400, "'email' field must be informed");
-
-        if (!newUserData.name)
-            throw new ApiError(400, "'name' field must be informed");
-
-        if (!newUserData.currentPassword)
-            throw new ApiError(400, "'Current password' field must be informed");
-
-        if (newUserData.currentPassword !== user.password)
-            throw new ApiError(400, "Wrong password");
-
-        if (newUserData.newPassword !== undefined && newUserData.newPassword.length < 4)
-            throw new ApiError(400, "Password must have 4 characters at least");
-
-        const existingUserEmail = await userDAO.getByEmail(newUserData.email);
-        if(existingUserEmail && existingUserEmail.id != user.id)
-            throw new ApiError(400, "This email is already being used");
-
-        const existingUsername = await userDAO.getByUsername(newUserData.username);
-        if(existingUsername && existingUsername.id != user.id)
-            throw new ApiError(400, "This username is already being used");
-
-        //
-        const newUser = new User(
-            user.id, 
-            newUserData.username, 
-            newUserData.email, 
-            newUserData.name, 
-            newUserData.newPassword ?? user.password, 
-            newUserData.pictureUrl ?? null
-        );
-            
-        const updatedUser = await userDAO.update(newUser);
-
-        if (updatedUser === null)
-            throw new ApiError(404, "User not found");
+        if (!updateResult.success)
+            throw new ApiError(updateResult.statusCode, updateResult.message);
  
-        const token = new AuthServive().createToken(updatedUser);
+        const token = new AuthServive().createToken(updateResult.data!);
 
         return { 
             statusCode: 200,
@@ -134,23 +63,4 @@ user_controller.put('/user', authMiddleware, (req, res) =>
     });
 })
 
-/*
-user_controller.delete('/user/:id', (req, res) => 
-{
-    processAndRespond(res, async () => 
-    {
-        const user = await userDAO.deleteById(parseInt(req.params.id))
-
-        if (user === null)
-           throw new ApiError(404, "User not found");
-
-        return { 
-            statusCode: 200, 
-            success: true, 
-            message: "User deleted", 
-            data: user
-        }
-    });
-})
-*/
 
