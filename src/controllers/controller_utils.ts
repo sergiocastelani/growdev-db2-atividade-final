@@ -1,10 +1,5 @@
 import { Response } from 'express'
-
-export class ApiError extends Error {
-    constructor(public statusCode: number, public message: string) {
-        super(message);
-    }
-}
+import { ApiError } from '../services/services_types';
 
 export interface ControllerResponse<T> {
     statusCode: number;

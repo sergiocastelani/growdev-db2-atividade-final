@@ -1,9 +1,10 @@
 import express from 'express'
-import { ApiError, processAndRespond } from './controller_utils';
+import { processAndRespond } from './controller_utils';
 import { tweetDAO } from '../daos/_setup';
 import { ITweet } from '../models/tweet';
 import { authMiddleware } from './middlewares/auth_middleware';
 import { loggedUserMiddleware } from './middlewares/logged_user_middleware';
+import { ApiError } from '../services/services_types';
 
 const tweet_controller = express.Router()
 export default tweet_controller;

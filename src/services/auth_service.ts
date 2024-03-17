@@ -1,7 +1,6 @@
-import { ApiError } from "../controllers/controller_utils";
 import { userDAO } from "../daos/_setup";
 import { IUserSecureInfo, UserSecureInfo } from "../models/user_secure_info";
-import { ServiceResponse, ServiceResponseAsync } from "./services_types";
+import { ApiError, ServiceResponse, ServiceResponseAsync } from "./services_types";
 import jwt from "jsonwebtoken";
 
 export class AuthServive 

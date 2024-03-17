@@ -1,5 +1,5 @@
 import express from 'express'
-import { ApiError, processAndRespond } from './controller_utils';
+import { processAndRespond } from './controller_utils';
 import { userDAO } from '../daos/_setup';
 import { IUser, User } from '../models/user';
 import { UserSecureInfo } from '../models/user_secure_info';
@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 import { UserUpdateRequest } from '../models/requests/user_update_request';
 import { authMiddleware } from './middlewares/auth_middleware';
 import { AuthServive } from '../services/auth_service';
+import { ApiError } from '../services/services_types';
 
 const user_controller = express.Router()
 export default user_controller;
