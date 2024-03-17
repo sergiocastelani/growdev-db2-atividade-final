@@ -1,31 +1,25 @@
 import { Request, Response } from "express";
 import { userDAO } from "../../daos/_setup";
-
-export const AUTH_TOKEN_NAME = 'authorization';
+import { AuthServive } from "../../services/auth_service";
 
 export async function authMiddleware(req: Request, res: Response, next: any)
 {
-    const authToken = req.header(AUTH_TOKEN_NAME);
+    const authToken = req.header(process.env.AUTH_TOKEN_NAME!);
 
-    if(!authToken) 
-    {
-        res.status(401).json({ 
-            success: false, 
-            message: "Unauthorized", 
-            data: null
-        });
-        return;
-    }
+    const authServive= new AuthServive();
+    const validateResult = authServive.validateToken(authToken ?? "--");
 
-    const user = await userDAO.getByToken(authToken);
+    if(!validateResult.success) 
+        return res.status(validateResult.statusCode).json(validateResult);
+
+    const user = await userDAO.getById(validateResult.data?.id ?? 0);
     if(!user) 
     {
-        res.status(401).json({ 
+        return res.status(500).json({ 
             success: false, 
-            message: "Unauthorized", 
+            message: "Could not find logged user", 
             data: null
         });
-        return;
     }
 
     res.locals.user = user;

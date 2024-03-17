@@ -1,19 +1,22 @@
 import { Request, Response } from "express";
 import { userDAO } from "../../daos/_setup";
-import { AUTH_TOKEN_NAME } from "./auth_middleware";
+import { AuthServive } from "../../services/auth_service";
 
 export async function loggedUserMiddleware(req: Request, res: Response, next: any)
 {
-    const authToken = req.header(AUTH_TOKEN_NAME);
-
+    const authToken = req.header(process.env.AUTH_TOKEN_NAME!);
     if(!authToken) 
         return next();
 
-    const user = await userDAO.getByToken(authToken);
-    if(!user) 
+    const authServive= new AuthServive();
+    const validateResult = authServive.validateToken(authToken ?? "");
+
+    if(!validateResult.success) 
         return next();
 
-    res.locals.user = user;
+    const user = await userDAO.getById(validateResult.data!.id);
+    if(user) 
+        res.locals.user = user;
 
     next();
 }

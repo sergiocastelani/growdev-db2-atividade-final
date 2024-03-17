@@ -5,7 +5,6 @@ export interface IUser
     email: string;
     name: string;
     password: string;
-    token: string | null;
     pictureUrl: string | null;
 }
 
@@ -16,7 +15,6 @@ export class User implements IUser {
         public email: string,
         public name: string,
         public password: string,
-        public token: string | null,
         public pictureUrl: string | null,
     )
     {}

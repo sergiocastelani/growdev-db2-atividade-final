@@ -1,11 +1,12 @@
 import express from 'express'
-import { ApiError, processAndRespond } from './_controller_utils';
+import { ApiError, processAndRespond } from './controller_utils';
 import { userDAO } from '../daos/_setup';
 import { IUser, User } from '../models/user';
 import { UserSecureInfo } from '../models/user_secure_info';
 import { randomUUID } from 'crypto';
 import { UserUpdateRequest } from '../models/requests/user_update_request';
 import { authMiddleware } from './middlewares/auth_middleware';
+import { AuthServive } from '../services/auth_service';
 
 const user_controller = express.Router()
 export default user_controller;
@@ -55,7 +56,6 @@ user_controller.post('/user', (req, res) => {
             throw new ApiError(400, "This username is already being used");
 
         //
-        user.token = randomUUID();
         const newUser = await userDAO.insert(user);
 
         return { 
@@ -67,7 +67,6 @@ user_controller.post('/user', (req, res) => {
                 newUser.username,
                 newUser.email,
                 newUser.name,
-                newUser.token,
                 newUser.pictureUrl
             )
         }
@@ -115,7 +114,6 @@ user_controller.put('/user', authMiddleware, (req, res) =>
             newUserData.email, 
             newUserData.name, 
             newUserData.newPassword ?? user.password, 
-            user.token, 
             newUserData.pictureUrl ?? null
         );
             
@@ -124,22 +122,18 @@ user_controller.put('/user', authMiddleware, (req, res) =>
         if (updatedUser === null)
             throw new ApiError(404, "User not found");
  
+        const token = new AuthServive().createToken(updatedUser);
+
         return { 
             statusCode: 200,
             success: true,
             message: "User updated",
-            data: new UserSecureInfo(
-                updatedUser.id,
-                updatedUser.username,
-                updatedUser.email,
-                updatedUser.name,
-                updatedUser.token,
-                updatedUser.pictureUrl
-            )
+            data: token
         }
     });
 })
 
+/*
 user_controller.delete('/user/:id', (req, res) => 
 {
     processAndRespond(res, async () => 
@@ -157,4 +151,5 @@ user_controller.delete('/user/:id', (req, res) =>
         }
     });
 })
+*/
 
