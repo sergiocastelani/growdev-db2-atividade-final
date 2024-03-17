@@ -1,6 +1,6 @@
 import { likeDAO } from "../daos/_setup";
 import { ILike, Like } from "../models/like";
-import { ApiError, ServiceResponseAsync, SuccessResponse } from "./services_types";
+import { ApiError, ServiceResponseAsync, SuccessResult } from "./services_types";
 
 export class LikeService 
 {
@@ -8,12 +8,7 @@ export class LikeService
     {
         const like = await likeDAO.insert(new Like(tweetId, userId));
         
-        return { 
-            success: true, 
-            message: "Like added",
-            statusCode: 200,
-            data: like
-        };
+        return SuccessResult("Like created", like, 201);
     }
 
     public async removeLike(tweetId: number, userId: number) : ServiceResponseAsync<ILike>
@@ -22,6 +17,6 @@ export class LikeService
         if (likeData === null)
             throw new ApiError(404, "Like data not found");
 
-        return SuccessResponse("Tweet unliked", likeData);
+        return SuccessResult("Tweet unliked", likeData);
     }
 }

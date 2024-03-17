@@ -14,7 +14,7 @@ export class ApiError extends Error {
     }
 }
 
-export function SuccessResponse<T>(message: string, data?: T, statusCode: number = 200) : ServiceResponse<T> 
+export function SuccessResult<T>(message: string, data?: T, statusCode: number = 200) : ServiceResponse<T> 
 {
     return {
         success: true,
