@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { userDAO } from "../../daos/_setup";
 import { AuthServive } from "../../services/auth_service";
+import { UserService } from "../../services/user_service";
 
 export async function loggedUserMiddleware(req: Request, res: Response, next: any)
 {
@@ -14,9 +14,11 @@ export async function loggedUserMiddleware(req: Request, res: Response, next: an
     if(!validateResult.success) 
         return next();
 
-    const user = await userDAO.getById(validateResult.data!.id);
-    if(user) 
-        res.locals.user = user;
+    const userService = new UserService();
+    const userResult = await userService.getById(validateResult.data?.id ?? 0);
+
+    if(userResult.success) 
+        res.locals.user = userResult.data;
 
     next();
 }

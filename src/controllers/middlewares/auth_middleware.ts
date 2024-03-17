@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { userDAO } from "../../daos/_setup";
 import { AuthServive } from "../../services/auth_service";
+import { UserService } from "../../services/user_service";
 
 export async function authMiddleware(req: Request, res: Response, next: any)
 {
@@ -12,17 +12,13 @@ export async function authMiddleware(req: Request, res: Response, next: any)
     if(!validateResult.success) 
         return res.status(validateResult.statusCode).json(validateResult);
 
-    const user = await userDAO.getById(validateResult.data?.id ?? 0);
-    if(!user) 
-    {
-        return res.status(500).json({ 
-            success: false, 
-            message: "Could not find logged user", 
-            data: null
-        });
-    }
+    const userService = new UserService();
+    const userResult = await userService.getById(validateResult.data?.id ?? 0);
 
-    res.locals.user = user;
+    if(!userResult.success) 
+        return res.status(validateResult.statusCode).json(validateResult);
+
+    res.locals.user = userResult.data;
 
     next();
 }
