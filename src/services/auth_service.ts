@@ -3,7 +3,7 @@ import { IUserSecureInfo, UserSecureInfo } from "../models/user_secure_info";
 import { ApiError, ServiceResponse, ServiceResponseAsync } from "./services_types";
 import jwt from "jsonwebtoken";
 
-export class AuthServive 
+export class AuthService 
 {
     public async login(email: string, password: string) : ServiceResponseAsync<string>
     {

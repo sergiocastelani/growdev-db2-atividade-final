@@ -4,7 +4,7 @@ import { IUser } from '../models/user';
 import { UserSecureInfo } from '../models/user_secure_info';
 import { UserUpdateRequest } from '../models/requests/user_update_request';
 import { authMiddleware } from './middlewares/auth_middleware';
-import { AuthServive } from '../services/auth_service';
+import { AuthService } from '../services/auth_service';
 import { ApiError, SuccessResult } from '../services/services_types';
 import { UserService } from '../services/user_service';
 
@@ -52,7 +52,7 @@ user_controller.put('/user', authMiddleware, (req, res) =>
         if (!updateResult.success)
             throw new ApiError(updateResult.statusCode, updateResult.message);
  
-        const token = new AuthServive().createToken(updateResult.data!);
+        const token = new AuthService().createToken(updateResult.data!);
 
         return { 
             statusCode: 200,

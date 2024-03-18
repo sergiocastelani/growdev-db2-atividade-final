@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AuthServive } from "../../services/auth_service";
+import { AuthService } from "../../services/auth_service";
 import { UserService } from "../../services/user_service";
 
 export async function loggedUserMiddleware(req: Request, res: Response, next: any)
@@ -8,8 +8,8 @@ export async function loggedUserMiddleware(req: Request, res: Response, next: an
     if(!authToken) 
         return next();
 
-    const authServive= new AuthServive();
-    const validateResult = authServive.validateToken(authToken ?? "");
+    const authService = new AuthService();
+    const validateResult = authService.validateToken(authToken ?? "");
 
     if(!validateResult.success) 
         return next();

@@ -1,7 +1,7 @@
 import express from 'express'
 import { processAndRespond } from './controller_utils';
 import { authMiddleware } from './middlewares/auth_middleware';
-import { AuthServive } from '../services/auth_service';
+import { AuthService } from '../services/auth_service';
 
 const auth_controller = express.Router()
 export default auth_controller;
@@ -12,7 +12,7 @@ auth_controller.post('/auth/login', async (req, res) =>
     {
         const { email, password } = req.body;
 
-        return await (new AuthServive()).login(email, password);
+        return await (new AuthService()).login(email, password);
     });
 })
 
