@@ -1,6 +1,6 @@
 import { likeDAO } from "../daos/_setup";
 import { ILike, Like } from "../models/like";
-import { ApiError, ServiceResponseAsync, SuccessResult } from "./services_types";
+import { ApiError, ErrorResult, ServiceResponseAsync, SuccessResult } from "./services_types";
 
 export class LikeService 
 {
@@ -14,8 +14,8 @@ export class LikeService
     public async removeLike(tweetId: number, userId: number) : ServiceResponseAsync<ILike>
     {
         const likeData = await likeDAO.deleteById(tweetId, userId);
-        if (likeData === null)
-            throw new ApiError(404, "Like data not found");
+        if (!likeData)
+            return ErrorResult(404, "Like data not found");
 
         return SuccessResult("Tweet unliked", likeData);
     }
