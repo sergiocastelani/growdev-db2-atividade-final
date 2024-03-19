@@ -1,6 +1,6 @@
 import { userDAO } from "../daos/_setup";
 import { IUserSecureInfo, UserSecureInfo } from "../models/user_secure_info";
-import { ApiError, ServiceResponse, ServiceResponseAsync } from "./services_types";
+import { ErrorResult, ServiceResponse, ServiceResponseAsync, SuccessResult } from "./services_types";
 import jwt from "jsonwebtoken";
 
 export class AuthService 
@@ -8,14 +8,14 @@ export class AuthService
     public async login(email: string, password: string) : ServiceResponseAsync<string>
     {
         if(!email)
-            throw new ApiError(400, "'email' field is required");
+            return ErrorResult(400, "'email' field is required");
 
         if(!password)
-            throw new ApiError(400, "'password' field is required");
+            return ErrorResult(400, "'password' field is required");
 
         const user = await userDAO.getByEmail(email);
         if(!user || user.password !== password)
-            throw new ApiError(400, "Invalid user/password");
+            return ErrorResult(400, "Invalid user/password");
 
         return { 
             statusCode: 200, 
@@ -29,24 +29,12 @@ export class AuthService
     {
         try
         {
-            if(!authToken) 
-                throw new Error();
-
             const payload = jwt.verify(authToken, process.env.JWT_PASSWORD!) as IUserSecureInfo;
-            return {
-                success: true, 
-                message: "Authorized",
-                statusCode: 200,
-                data: payload
-            }
+            return SuccessResult("Authorized", payload);
         }
         catch(e)
         {
-            return {
-                success: false, 
-                message: "Unauthorized",
-                statusCode: 401,
-            }
+            return ErrorResult(401, "Unauthorized");
         }
     }
 
