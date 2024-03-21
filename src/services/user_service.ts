@@ -1,7 +1,7 @@
 import { userDAO } from "../daos/_setup";
 import { UserUpdateRequest } from "../models/requests/user_update_request";
 import { IUser, User } from "../models/user";
-import { ApiError, ErrorResult, ServiceResponseAsync, SuccessResult } from "./services_types";
+import { ErrorResult, ServiceResponseAsync, SuccessResult } from "./services_types";
 
 export class UserService 
 {
@@ -43,7 +43,7 @@ export class UserService
         const updatedUser = await userDAO.update(newUser);
 
         if (updatedUser === null)
-            throw new ApiError(404, "User not found");
+            return ErrorResult(404, "User not found");
 
         return SuccessResult("User updated", updatedUser);
     }

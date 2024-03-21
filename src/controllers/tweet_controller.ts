@@ -3,7 +3,6 @@ import { processAndRespond } from './controller_utils';
 import { ITweet } from '../models/tweet';
 import { authMiddleware } from './middlewares/auth_middleware';
 import { loggedUserMiddleware } from './middlewares/logged_user_middleware';
-import { ApiError } from '../services/services_types';
 import { TweetService } from '../services/tweet_service';
 
 const tweet_controller = express.Router()

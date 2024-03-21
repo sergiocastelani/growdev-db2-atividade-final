@@ -1,6 +1,6 @@
 import { likeDAO } from "../daos/_setup";
 import { ILike, Like } from "../models/like";
-import { ApiError, ErrorResult, ServiceResponseAsync, SuccessResult } from "./services_types";
+import { ErrorResult, ServiceResponseAsync, SuccessResult } from "./services_types";
 
 export class LikeService 
 {
