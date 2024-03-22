@@ -120,4 +120,13 @@ describe('Test for AuthService class', () =>
         expect(result).toHaveProperty('data');
         expect(result.data?.email).toBe('email');
     });
+
+    test('decoteToken() can decode JWT token', () => 
+    {
+        const sut = new AuthService();
+
+        const token = sut.decodeToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UifQ.DjwRE2jZhren2Wt37t5hlVru6Myq4AhpGLiiefF69u8');
+
+        expect(token).toHaveProperty('name', 'John Doe');
+    });
 });

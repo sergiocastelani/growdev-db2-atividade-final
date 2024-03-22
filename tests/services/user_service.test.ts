@@ -3,6 +3,8 @@ import { userDAO } from "../../src/daos/_setup";
 import { IUser, User } from "../../src/models/user";
 import { ErrorResult, SuccessResult } from "../../src/services/services_types";
 import { UserUpdateRequest } from "../../src/models/requests/user_update_request";
+import { UserDisplay } from "../../src/models/user_display";
+import e from "express";
 
 jest.mock('../../src/daos/_setup');
 const userDAOMock = userDAO as jest.Mocked<typeof userDAO>;
@@ -32,6 +34,17 @@ const createUpdateRequest = () => ({
 
 describe('Test for UserService class', () => 
 {
+    test('User types constructors', () => 
+    {
+        const user = createTestUser()
+        const userDisplay1 = new UserDisplay(1, "username", "name", null);
+        const userDisplay2 = UserDisplay.FromUser(user);
+
+        expect(user.email).toBe("email");
+        expect(userDisplay1.username).toBe("username");
+        expect(userDisplay2.username).toBe(user.username);
+    });
+
     test('getById() must fail on inexistent user ID', async () => 
     {
         const sut = new UserService();
