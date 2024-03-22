@@ -38,7 +38,7 @@ export class TweetService
     {
         const tweet = await tweetDAO.getById(tweetId);
 
-        if (tweet === null)
+        if (!tweet)
            throw new ApiError(404, "Tweet not found");
 
         return SuccessResult("Tweet found", tweet);
@@ -68,7 +68,7 @@ export class TweetService
     {
         const tweet = await tweetDAO.deleteById(id);
 
-        if (tweet === null)
+        if (!tweet)
             throw new ApiError(404, "Tweet not found");
 
         return SuccessResult("Tweet deleted", tweet);
