@@ -4,7 +4,6 @@ import { IUser, User } from "../../src/models/user";
 import { ErrorResult, SuccessResult } from "../../src/services/services_types";
 import { UserUpdateRequest } from "../../src/models/requests/user_update_request";
 import { UserDisplay } from "../../src/models/user_display";
-import e from "express";
 
 jest.mock('../../src/daos/_setup');
 const userDAOMock = userDAO as jest.Mocked<typeof userDAO>;

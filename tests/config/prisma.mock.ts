@@ -5,7 +5,6 @@ import prisma from "../../src/daos/prisma/_setup";
 jest.mock("../../src/daos/prisma/_setup", () => ({
     __esModule: true,
     default: mockDeep<PrismaClient>(),
-    setupFilesAfterEnv: ["<rootDir>/tests/config/prisma.mock.ts"],
 }));
 
 beforeEach(() => {

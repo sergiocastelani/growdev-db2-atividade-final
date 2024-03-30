@@ -10,4 +10,6 @@ export default {
     coveragePathIgnorePatterns: [
         "<rootDir>/src/daos",
     ],
+    setupFiles: ["dotenv/config"],
+    setupFilesAfterEnv: ["<rootDir>/tests/config/prisma.mock.ts"],
 }

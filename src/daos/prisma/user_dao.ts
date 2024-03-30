@@ -1,5 +1,5 @@
 import { User } from "../../models/user";
-import { repository } from "./_setup";
+import repository from "./_setup";
 
 export class UserDAO_Prisma 
 {
