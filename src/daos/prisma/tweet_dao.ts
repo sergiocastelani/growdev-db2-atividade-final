@@ -1,7 +1,7 @@
 import { Tweet } from "../../models/tweet";
 import { TweetDisplay } from "../../models/tweet_display";
 import { UserDisplay } from "../../models/user_display";
-import { repository } from "./_setup";
+import repository from "./_setup";
 
 export class TweetDAO_Prisma 
 {

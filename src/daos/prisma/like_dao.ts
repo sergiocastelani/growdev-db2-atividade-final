@@ -1,5 +1,5 @@
 import { Like } from "../../models/like";
-import { repository } from "./_setup";
+import repository from "./_setup";
 
 export class LikeDAO_Prisma 
 {
