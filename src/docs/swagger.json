@@ -79,6 +79,7 @@
 			"description": "'Like' functionality",
 			"parameters": [
 				{
+					"schema": {},
 					"name": "tweetId",
 					"in": "path",
 					"required": true
