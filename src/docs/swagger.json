@@ -1,0 +1,9 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "GrowTweet API",
+        "description": "Public endpoints to integrate with GrowTweet service",
+        "version": "1.0.0"
+    },
+    "paths": {}
+}
