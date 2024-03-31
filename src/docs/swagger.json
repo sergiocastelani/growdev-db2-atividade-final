@@ -1,0 +1,193 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "GrowTweet API",
+		"description": "Public endpoints to integrate with GrowTweet service",
+		"version": "1.0.0"
+	},
+	"paths": {
+		"/auth/login" : {
+			"post": {
+				"description": "Log in and return the access token",
+				"tags": ["Auth"],
+				"parameters": [],
+				"requestBody": {
+					"description": "User credentials",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"example": "user@example.com"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"required": ["email", "password"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successfull login",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf" : [
+										{"$ref": "#/components/schemas/defaultResponse"},
+										{
+											"properties": {
+												"data": {
+													"type": "string",
+													"description": "JWT token"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Some of the credential fields is missing or user does not exist",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/defaultResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unknown server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/defaultResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/like/{tweetId}": {
+			"description": "'Like' functionality",
+			"parameters": [
+				{
+					"schema": {},
+					"name": "tweetId",
+					"in": "path",
+					"required": true
+				}
+			],
+			"post": {
+				"description": "Like a tweet with the current logged user",
+				"tags": ["Likes"],
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "The like was successfully registered",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf" : [
+										{"$ref": "#/components/schemas/defaultResponse"},
+										{
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/tweet"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized. Is user logged in?",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/defaultResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unknown server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/defaultResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"tweet": {
+				"description": "Basic Like information",
+				"type": "object",
+				"properties": {
+					"tweetId": {
+						"description": "The identifier of the tweet that was liked",
+						"type": "number"
+					},
+					"userId": {
+						"description": "The identifier of the user that liked that tweet",
+						"type": "number"
+					}
+				}
+			},
+			"defaultResponse": {
+				"description": "Default response format",
+				"type": "object",
+				"properties": {
+					"success": {
+						"description": "Tells if the operation was successfull",
+						"type": "boolean"
+					},
+					"statusCode": {
+						"description": "The HTTP status code",
+						"type": "number"
+					},
+					"message": {
+						"description": "Optional message",
+						"type": "string",
+						"nullable": true
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"tags": [
+		{
+			"name": "Auth",
+			"description": "Endpoints related to authorization"
+		},
+		{
+			"name": "Likes",
+			"description": "Endpoints related to Like"
+		}
+	],
+	"security": [
+		{ "bearerAuth": [] }
+	]
+}
