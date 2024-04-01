@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "npx tsc && npx prisma migrate deploy",
-    "start": "node ./dist/index.js",
+    "start": "node ./dist/src/index.js",
     "test": "jest --silent --noStackTrace",
     "test:verbose": "jest --verbose --detectOpenHandles",
     "test:coverage": "jest --coverage",
