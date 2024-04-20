@@ -22,3 +22,10 @@ auth_controller.get('/auth/check', authMiddleware, (req, res) => {
         message: "Logged user",
     });
 })
+
+auth_controller.get('/auth/ping', async (req, res) => {
+    return res.status(200).json({
+        success: true,
+        message: "Pong",
+    });
+})
